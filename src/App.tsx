@@ -27,32 +27,32 @@ const THEMES = [
     id: 'minimal-dark',
     name: 'Minimal Dark',
     containerClass: 'bg-[#0A0A0A] text-[#F5F5F5]',
-    textClass: 'text-[#F5F5F5] font-serif font-light tracking-wide',
-    authorClass: 'text-[#F5F5F5]/50 font-display tracking-[0.25em] text-xs uppercase',
+    textClass: 'text-[#F5F5F5] font-serif font-normal tracking-wide',
+    authorClass: 'text-[#F5F5F5]/50 font-sans tracking-[0.25em] text-[10px] uppercase',
     overlay: ''
   },
   {
     id: 'minimal-light',
     name: 'Minimal Light',
     containerClass: 'bg-[#F9F9F9] text-[#111111]',
-    textClass: 'text-[#111111] font-serif font-light tracking-wide',
-    authorClass: 'text-[#111111]/50 font-display tracking-[0.25em] text-xs uppercase',
+    textClass: 'text-[#111111] font-serif font-normal tracking-wide',
+    authorClass: 'text-[#111111]/50 font-sans tracking-[0.25em] text-[10px] uppercase',
     overlay: ''
   },
   {
     id: 'warm-stone',
     name: 'Warm Stone',
     containerClass: 'bg-[#EAE6DF] text-[#2C2A28]',
-    textClass: 'text-[#2C2A28] font-serif font-light tracking-wide',
-    authorClass: 'text-[#2C2A28]/50 font-display tracking-[0.25em] text-xs uppercase',
+    textClass: 'text-[#2C2A28] font-serif font-normal tracking-wide',
+    authorClass: 'text-[#2C2A28]/50 font-sans tracking-[0.25em] text-[10px] uppercase',
     overlay: 'bg-noise opacity-10 mix-blend-overlay'
   },
   {
     id: 'modern-sans',
     name: 'Modern Sans',
     containerClass: 'bg-[#1A1A1A] text-[#F5F5F5]',
-    textClass: 'text-[#F5F5F5] font-display font-light leading-relaxed tracking-wide',
-    authorClass: 'text-[#F5F5F5]/40 font-sans tracking-[0.2em] text-xs uppercase',
+    textClass: 'text-[#F5F5F5] font-sans font-normal leading-relaxed tracking-wide',
+    authorClass: 'text-[#F5F5F5]/40 font-sans tracking-[0.2em] text-[10px] uppercase',
     overlay: ''
   }
 ];
@@ -270,17 +270,17 @@ Also provide a short, engaging Instagram/Pinterest caption for this quote, inclu
                 {/* Overlay for texture/gradients */}
                 {theme.overlay && <div className={`absolute inset-0 pointer-events-none ${theme.overlay}`}></div>}
                 
-                <div className="relative z-10 flex flex-col items-center justify-center h-full w-full">
+                <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-6">
                   <p 
-                    className={`text-xl md:text-2xl lg:text-[28px] leading-[1.4] md:leading-[1.5] mb-10 ${theme.textClass}`}
+                    className={`text-lg md:text-xl lg:text-[22px] leading-relaxed md:leading-loose mb-8 text-center text-balance max-w-[85%] mx-auto ${theme.textClass}`}
                     style={{
                       fontStyle: theme.id === 'modern-sans' ? 'normal' : 'italic'
                     }}
                   >
                     "{quote}"
                   </p>
-                  <div className="w-8 h-[1px] bg-current opacity-20 mb-6"></div>
-                  <p className={`text-[10px] md:text-xs ${theme.authorClass}`}>
+                  <div className="w-6 h-[1px] bg-current opacity-20 mb-6"></div>
+                  <p className={`text-[9px] md:text-[10px] ${theme.authorClass}`}>
                     MODERN WISDOM
                   </p>
                 </div>
