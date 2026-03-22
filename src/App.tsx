@@ -17,9 +17,9 @@ const TOPICS = [
 ];
 
 const ASPECT_RATIOS = [
-  { id: '1:1', name: 'Square (IG)', class: 'aspect-square', width: 1080, height: 1080 },
-  { id: '4:5', name: 'Portrait (IG)', class: 'aspect-[4/5]', width: 1080, height: 1350 },
-  { id: '9:16', name: 'Story/Pin', class: 'aspect-[9/16]', width: 1080, height: 1920 }
+  { id: '1:1', name: '1:1 (Square)', class: 'aspect-square', width: 1080, height: 1080 },
+  { id: '4:5', name: '4:5 (Portrait)', class: 'aspect-[4/5]', width: 1080, height: 1350 },
+  { id: '9:16', name: '9:16 (Story)', class: 'aspect-[9/16]', width: 1080, height: 1920 }
 ];
 
 const THEMES = [
@@ -27,7 +27,7 @@ const THEMES = [
     id: 'minimal-dark',
     name: 'Minimal Dark',
     containerClass: 'bg-[#0A0A0A] text-[#F5F5F5]',
-    textClass: 'text-[#F5F5F5] font-serif font-normal tracking-wide',
+    textClass: 'text-[#F5F5F5] font-poppins font-semibold tracking-tight',
     authorClass: 'text-[#F5F5F5]/50 font-sans tracking-[0.25em] text-[10px] uppercase',
     overlay: ''
   },
@@ -35,7 +35,7 @@ const THEMES = [
     id: 'minimal-light',
     name: 'Minimal Light',
     containerClass: 'bg-[#F9F9F9] text-[#111111]',
-    textClass: 'text-[#111111] font-serif font-normal tracking-wide',
+    textClass: 'text-[#111111] font-poppins font-semibold tracking-tight',
     authorClass: 'text-[#111111]/50 font-sans tracking-[0.25em] text-[10px] uppercase',
     overlay: ''
   },
@@ -43,7 +43,7 @@ const THEMES = [
     id: 'warm-stone',
     name: 'Warm Stone',
     containerClass: 'bg-[#EAE6DF] text-[#2C2A28]',
-    textClass: 'text-[#2C2A28] font-serif font-normal tracking-wide',
+    textClass: 'text-[#2C2A28] font-poppins font-semibold tracking-tight',
     authorClass: 'text-[#2C2A28]/50 font-sans tracking-[0.25em] text-[10px] uppercase',
     overlay: 'bg-noise opacity-10 mix-blend-overlay'
   },
@@ -51,7 +51,7 @@ const THEMES = [
     id: 'modern-sans',
     name: 'Modern Sans',
     containerClass: 'bg-[#1A1A1A] text-[#F5F5F5]',
-    textClass: 'text-[#F5F5F5] font-sans font-normal leading-relaxed tracking-wide',
+    textClass: 'text-[#F5F5F5] font-poppins font-semibold tracking-tight',
     authorClass: 'text-[#F5F5F5]/40 font-sans tracking-[0.2em] text-[10px] uppercase',
     overlay: ''
   }
@@ -61,8 +61,8 @@ export default function App() {
   const [topic, setTopic] = useState(TOPICS[0]);
   const [customTopic, setCustomTopic] = useState("");
   const [theme, setTheme] = useState(THEMES[0]);
-  const [aspectRatio, setAspectRatio] = useState(ASPECT_RATIOS[0]);
-  const [quote, setQuote] = useState("You are scrolling through a million lives, yet you have not lived your own for a single moment. Put down the screen. The real notification is the beating of your own heart.");
+  const [aspectRatio, setAspectRatio] = useState(ASPECT_RATIOS[1]); // Default to 4:5
+  const [quote, setQuote] = useState("Put down the screen. The real notification is the beating of your own heart.");
   const [caption, setCaption] = useState("In an age of constant connection, we have never been more disconnected from ourselves. Take a breath. Look up. Live now. ✨\n\n#Osho #ModernWisdom #Mindfulness #DigitalDetox #Awakening");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -74,7 +74,8 @@ export default function App() {
       const activeTopic = customTopic.trim() || topic;
       const prompt = `You are a profound, modern philosopher (like Osho, but speaking to today's world).
 Address the topic of: "${activeTopic}".
-Create a completely original, profound, and deeply insightful quote suitable for a premium social media post (max 2-4 sentences). It should feel like a fresh, modern revelation.
+Create a completely original, profound, and deeply insightful quote suitable for a premium social media post.
+Keep it very short and punchy (maximum 10 to 15 words).
 Do not use hashtags in the quote itself.
 Also provide a short, engaging Instagram/Pinterest caption for this quote, including relevant hashtags.`;
 
@@ -111,6 +112,8 @@ Also provide a short, engaging Instagram/Pinterest caption for this quote, inclu
     if (!postRef.current) return;
     
     try {
+      await document.fonts.ready; // Ensure fonts are fully loaded to prevent text clipping
+      
       // Calculate pixel ratio to hit the target width (e.g., 1080px)
       const currentWidth = postRef.current.offsetWidth;
       const targetPixelRatio = aspectRatio.width / currentWidth;
@@ -118,6 +121,8 @@ Also provide a short, engaging Instagram/Pinterest caption for this quote, inclu
       const dataUrl = await toPng(postRef.current, {
         quality: 1.0,
         pixelRatio: targetPixelRatio,
+        canvasWidth: aspectRatio.width,
+        canvasHeight: aspectRatio.height,
         backgroundColor: theme.containerClass.includes('bg-[#0A0A0A]') ? '#0A0A0A' : 
                          theme.containerClass.includes('bg-[#F9F9F9]') ? '#F9F9F9' : 
                          theme.containerClass.includes('bg-[#EAE6DF]') ? '#EAE6DF' : '#1A1A1A',
@@ -270,11 +275,18 @@ Also provide a short, engaging Instagram/Pinterest caption for this quote, inclu
                 {/* Overlay for texture/gradients */}
                 {theme.overlay && <div className={`absolute inset-0 pointer-events-none ${theme.overlay}`}></div>}
                 
+                {/* Background Quote Text */}
+                <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none z-0 select-none opacity-10">
+                  <p className="text-current font-poppins font-semibold text-[70px] md:text-[100px] lg:text-[130px] leading-[0.85] text-center uppercase tracking-tighter w-[180%] break-words -rotate-12">
+                    {quote}
+                  </p>
+                </div>
+                
                 <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-6">
                   <p 
-                    className={`text-lg md:text-xl lg:text-[22px] leading-relaxed md:leading-loose mb-8 text-center text-balance max-w-[85%] mx-auto ${theme.textClass}`}
+                    className={`text-lg md:text-xl lg:text-2xl leading-relaxed md:leading-loose mb-8 text-center max-w-[90%] mx-auto break-words ${theme.textClass}`}
                     style={{
-                      fontStyle: theme.id === 'modern-sans' ? 'normal' : 'italic'
+                      fontStyle: 'normal'
                     }}
                   >
                     "{quote}"
